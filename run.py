@@ -67,12 +67,12 @@ def download_image(image_id, url, save_dirname, timeout, resize_width,
             if img.shape[1] > resize_width:
                 resized = resize_image(img, resize_width)
                 imsave(filepath, resized)
+                return True
         except Exception as e:
             print('warn: failed to process {}, url: {}, img.shape: {}'.format(filepath, url, img.shape))
             print(e)
             os.remove(filepath)
             return False
-        return True
 
     # save image directly
     res = requests.get(url, timeout=timeout, stream=True)
@@ -140,12 +140,13 @@ def download_images_from_csv(csv_filepath, save_dir, num_workers,
 @click.command()
 @click.argument('train_csv')
 @click.argument('validation_csv')
+@click.argument('test_csv')
 @click.argument('save_dir')
 @click.option('--num_workers', default=1)
 @click.option('--timeout', default=60)
 @click.option('--enable_resize', default=False)
 @click.option('--resize_width', default=1024)
-def main(train_csv, validation_csv, save_dir, num_workers, timeout,
+def main(train_csv, validation_csv, test_csv, save_dir, num_workers, timeout,
          enable_resize, resize_width):
     print('opt - save_dir: {}, num_workers: {}, enable_resize: {} resize_width: {}, timeout: {}'
           .format(save_dir, num_workers, enable_resize, resize_width, timeout))
@@ -157,6 +158,11 @@ def main(train_csv, validation_csv, save_dir, num_workers, timeout,
     print('download validation images')
     download_images_from_csv(validation_csv,
                              os.path.join(save_dir, 'validation'),
+                             num_workers, timeout, enable_resize, resize_width)
+
+    print('download test images')
+    download_images_from_csv(test_csv,
+                             os.path.join(save_dir, 'test'),
                              num_workers, timeout, enable_resize, resize_width)
 
 

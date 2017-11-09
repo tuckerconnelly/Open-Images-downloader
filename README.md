@@ -21,5 +21,5 @@ bash download.sh
 Then start to download
 
 ```
-python run.py ./download/images_2016_08/train/images.csv ./download/images_2016_08/validation/images.csv ./download/images --num_workers 30
+python run.py ./download/2017_07/train/images.csv ./download/2017_07/validation/images.csv ./download/2017_07/test/images.csv ./download/images --enable_resize=True --num_workers=30
 ```
